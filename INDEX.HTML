@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AiWasl - مساعدك الذكي لخدمة العملاء</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="icon" href="Agenda (13).png" type="image/x-icon"> 
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .section-title {
+            position: relative;
+            padding-bottom: 0.75rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #2dd4bf;
+        }
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* =================================================================== */
+        /* === NEXT-LEVEL NAVIGATION & HERO STYLES === */
+        /* =================================================================== */
+
+        /* --- Dynamic Glassmorphism Header --- */
+        #main-header {
+            transition: all 0.3s ease-in-out;
+        }
+        #main-header.scrolled {
+            background-color: rgba(17, 24, 39, 0.8); /* Opaque dark blue-gray */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- Desktop Navigation Link Underline Effect --- */
+        .desktop-nav a {
+            position: relative;
+            padding-bottom: 8px;
+        }
+        .desktop-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #2dd4bf;
+            transition: width 0.3s ease-in-out;
+        }
+        .desktop-nav a:hover::after {
+            width: 100%;
+        }
+
+        /* --- Enhanced Mobile Menu --- */
+        #mobile-menu {
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+        #mobile-menu.open {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .hamburger-line {
+            transition: all 0.3s ease-in-out;
+        }
+        #menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 40;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            pointer-events: none;
+        }
+        #menu-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        /* --- Next-Level Hero Section --- */
+        #home {
+            position: relative;
+            overflow: hidden; /* Important for the background pseudo-element */
+        }
+        #home::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                radial-gradient(circle at 15% 20%, rgba(45, 212, 191, 0.15), transparent 40%),
+                radial-gradient(circle at 85% 80%, rgba(59, 130, 246, 0.1), transparent 40%);
+            z-index: 0;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        @keyframes hero-fade-in-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hero-content h1 { animation: hero-fade-in-up 0.8s ease-out 0.2s backwards; }
+        .hero-content p { animation: hero-fade-in-up 0.8s ease-out 0.4s backwards; }
+        .hero-content .cta-button { animation: hero-fade-in-up 0.8s ease-out 0.6s backwards; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <!-- Header & Navigation -->
+    <header id="main-header" class="fixed top-0 left-0 right-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#home" class="flex items-center space-x-3 rtl:space-x-reverse z-50">
+                <img src="Agenda (13).png" alt="logo" class="h-10 w-10">
+                <span class="text-2xl font-bold text-white">AiWasl</span>
+            </a>
+            <!-- THE FIX IS HERE: Changed space-x-12 to gap-x-12 -->
+            <div class="hidden md:flex items-center gap-x-12 text-lg desktop-nav">
+                <a href="#home" class="hover:text-teal-400 transition-colors">الرئيسية</a>
+                <a href="#features" class="hover:text-teal-400 transition-colors">الميزات</a>
+                <a href="#pricing" class="hover:text-teal-400 transition-colors">الأسعار</a>
+                <a href="#faq" class="hover:text-teal-400 transition-colors">الأسئلة الشائعة</a>
+            </div>
+            <a href="https://wa.me/212656215620?text=Hello%20AiWasl,%20I'm%20interested%20in%20your%20service." target="_blank" class="hidden md:block bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-6 rounded-lg transition-transform hover:scale-105 shadow-lg shadow-teal-500/30 hover:shadow-xl hover:shadow-teal-500/40">
+                ابدأ الآن
+            </a>
+            <!-- Mobile Menu Button -->
+            <button id="menu-btn" class="md:hidden flex flex-col justify-center items-center z-50">
+                <span class="hamburger-line block w-6 h-0.5 bg-gray-200"></span>
+                <span class="hamburger-line block w-6 h-0.5 bg-gray-200 mt-1.5"></span>
+                <span class="hamburger-line block w-6 h-0.5 bg-gray-200 mt-1.5"></span>
+            </button>
+        </nav>
+    </header>
+    
+    <!-- Mobile Menu & Overlay -->
+    <div id="menu-overlay"></div>
+    <div id="mobile-menu" class="fixed top-0 left-0 w-full bg-gray-800 z-40 pt-24 md:hidden">
+        <a href="#home" class="block py-4 px-6 text-xl text-center hover:bg-gray-700">الرئيسية</a>
+        <a href="#features" class="block py-4 px-6 text-xl text-center hover:bg-gray-700">الميزات</a>
+        <a href="#pricing" class="block py-4 px-6 text-xl text-center hover:bg-gray-700">الأسعار</a>
+        <a href="#faq" class="block py-4 px-6 text-xl text-center hover:bg-gray-700">الأسئلة الشائعة</a>
+         <div class="p-6">
+            <a href="https://wa.me/212656215620?text=Hello%20AiWasl,%20I'm%20interested%20in%20your%20service." target="_blank" class="block text-center bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-6 rounded-lg">
+                ابدأ الآن
+            </a>
+        </div>
+    </div>
+
+
+    <!-- Main Content -->
+    <main>
+        <!-- Home Section -->
+        <section id="home" class="min-h-screen flex items-center bg-gray-900">
+            <div class="container mx-auto px-6 text-center hero-content">
+                <h1 class="text-4xl md:text-7xl font-extrabold text-white leading-tight">
+                    حوّل محادثاتك إلى مبيعات مع <span class="text-teal-400">AiWasl</span>
+                </h1>
+                <p class="mt-6 text-lg md:text-xl text-gray-400 max-w-3xl mx-auto">
+                    مساعدك الذكي الذي يعمل على مدار الساعة للإجابة على عملائك عبر واتساب وموقعك الإلكتروني بالدارجة المغربية، العربية، واللغات الأخرى.
+                </p>
+                <div class="mt-10">
+                    <a href="#pricing" class="cta-button bg-teal-500 hover:bg-teal-600 text-white font-bold py-4 px-10 rounded-lg text-lg transition-transform hover:scale-105 inline-block shadow-lg shadow-teal-500/30 hover:shadow-xl hover:shadow-teal-500/40">
+                        اكتشف الباقات
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="py-20 bg-gray-800 fade-in-section">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl md:text-4xl font-bold text-center text-white section-title max-w-md mx-auto">مصمم لنمو أعمالك</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mt-16 text-center">
+                    <!-- Feature 1 -->
+                    <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-700 hover:border-teal-400 transition-colors">
+                        <div class="bg-teal-500/10 rounded-full h-16 w-16 flex items-center justify-center mx-auto">
+                            <svg class="h-8 w-8 text-teal-400" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-dots-fill" viewBox="0 0 16 16">
+  <path d="M16 8c0 3.866-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7M5 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0m4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+</svg>
+                        </div>
+                        <h3 class="mt-6 text-2xl font-bold text-white">شات بوت للمواقع</h3>
+                        <p class="mt-4 text-gray-400">قدّم دعمًا فوريًا لزوار موقعك على مدار الساعة وأجب على استفساراتهم تلقائيًا.</p>
+                    </div>
+                    <!-- Feature 2 -->
+                    <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-700 hover:border-teal-400 transition-colors">
+                        <div class="bg-teal-500/10 rounded-full h-16 w-16 flex items-center justify-center mx-auto">
+                           <svg class="h-8 w-8 text-teal-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-0.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg>
+                        </div>
+                        <h3 class="mt-6 text-2xl font-bold text-white">بوت واتساب بالدارجة</h3>
+                        <p class="mt-4 text-gray-400">حوّل واتساب إلى أداة مبيعات آلية تفهم لهجة عملائك وترد عليهم فورًا.</p>
+                    </div>
+                    <!-- Feature 3 -->
+                    <div class="bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-700 hover:border-teal-400 transition-colors">
+                        <div class="bg-teal-500/10 rounded-full h-16 w-16 flex items-center justify-center mx-auto">
+                            <svg class="h-8 w-8 text-teal-400" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-soundwave" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M8.5 2a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-1 0v-11a.5.5 0 0 1 .5-.5m-2 2a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5m4 0a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5m-6 1.5A.5.5 0 0 1 5 6v4a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m8 0a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m-10 1A.5.5 0 0 1 3 7v2a.5.5 0 0 1-1 0V7a.5.5 0 0 1 .5-.5m12 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0V7a.5.5 0 0 1 .5-.5"/>
+</svg>
+                        </div>
+                        <h3 class="mt-6 text-2xl font-bold text-white">مساعد صوتي ذكي</h3>
+                        <p class="mt-4 text-gray-400">قدم تجربة مستقبلية لزوار موقعك مع مساعد صوتي يتحدث ويجيب على استفساراتهم.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing" class="py-20 bg-gray-900 fade-in-section">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl md:text-4xl font-bold text-center text-white section-title max-w-md mx-auto">باقات أسعار تناسب الجميع</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+                    <!-- Free Plan -->
+                    <div class="bg-gray-800 rounded-xl p-8 shadow-lg border border-gray-700 flex flex-col hover:border-teal-500 transition-all duration-300">
+                        <h3 class="text-2xl font-bold text-teal-400">الباقة المجانية</h3>
+                        <p class="mt-4 text-gray-400">للتجربة والبداية.</p>
+                        <div class="mt-6 text-4xl font-extrabold text-white">
+                            $0 <span class="text-lg font-medium text-gray-400">/ شهر</span>
+                        </div>
+                        <ul class="mt-8 space-y-4 text-gray-300 flex-grow">
+                            <li class="flex items-center"><span class="text-teal-400 mr-3 rtl:ml-3">✔</span> 100 رسالة / شهر</li>
+                            <li class="flex items-center"><span class="text-teal-400 mr-3 rtl:ml-3">✔</span> 1 بوت (واتساب أو موقع)</li>
+                            <li class="flex items-center"><span class="text-teal-400 mr-3 rtl:ml-3">✔</span> دعم بالبريد الإلكتروني</li>
+                        </ul>
+                        <!-- IMPORTANT: Link updated to WhatsApp -->
+                        <a href="https://wa.me/212656215620?text=Hello%20AiWasl,%20I'm%20interested%20in%20the%20Free%20plan." target="_blank" class="mt-8 block w-full text-center bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+                            ابدأ مجانًا
+                        </a>
+                    </div>
+
+                    <!-- Basic Plan -->
+                    <div class="bg-gray-800 rounded-xl p-8 shadow-2xl border-2 border-teal-500 flex flex-col transform md:scale-105">
+                        <div class="text-center">
+                            <span class="bg-teal-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">الأكثر شيوعًا</span>
+                            <h3 class="text-2xl font-bold text-white mt-4">الباقة الأساسية</h3>
+                        </div>
+                        <p class="mt-4 text-gray-400 text-center">للأعمال الصغيرة والمتوسطة.</p>
+                        <div class="mt-6 text-5xl font-extrabold text-white text-center">
+                            $25 <span class="text-lg font-medium text-gray-400">/ شهر</span>
+                        </div>
+                        <ul class="mt-8 space-y-4 text-gray-300 flex-grow">
+                            <li class="flex items-center"><span class="text-teal-400 mr-3 rtl:ml-3">✔</span> 2,000 رسالة / شهر</li>
+                            <li class="flex items-center"><span class="text-teal-400 mr-3 rtl:ml-3">✔</span> 3 بوتات (واتساب وموقع)</li>
+                            <li class="flex items-center"><span class="text-teal-400 mr-3 rtl:ml-3">✔</span> إزالة العلامة المائية</li>
+                            <li class="flex items-center"><span class="text-teal-400 mr-3 rtl:ml-3">✔</span> دعم عبر واتساب</li>
+                        </ul>
+                        <!-- IMPORTANT: Link updated to WhatsApp -->
+                        <a href="https://wa.me/212656215620?text=Hello%20AiWasl,%20I'm%20interested%20in%20the%20Basic%20plan." target="_blank" class="mt-8 block w-full text-center bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+                            اختر الباقة
+                        </a>
+                    </div>
+                    
+                    <!-- Pro Plan -->
+                    <div class="bg-gray-800 rounded-xl p-8 shadow-lg border border-gray-700 flex flex-col hover:border-teal-500 transition-all duration-300">
+                        <h3 class="text-2xl font-bold text-teal-400">الباقة الاحترافية</h3>
+                        <p class="mt-4 text-gray-400">للشركات التي تحتاج المزيد.</p>
+                        <div class="mt-6 text-4xl font-extrabold text-white">
+                            $75 <span class="text-lg font-medium text-gray-400">/ شهر</span>
+                        </div>
+                        <ul class="mt-8 space-y-4 text-gray-300 flex-grow">
+                             <li class="flex items-center"><span class="text-teal-400 mr-3 rtl:ml-3">✔</span> 10,000 رسالة / شهر</li>
+                            <li class="flex items-center"><span class="text-teal-400 mr-3 rtl:ml-3">✔</span> عدد بوتات غير محدود</li>
+                            <li class="flex items-center"><span class="text-teal-400 mr-3 rtl:ml-3">✔</span> مساعد صوتي</li>
+                            <li class="flex items-center"><span class="text-teal-400 mr-3 rtl:ml-3">✔</span> دعم فني مخصص</li>
+                        </ul>
+                         <!-- IMPORTANT: Link updated to WhatsApp -->
+                         <a href="https://wa.me/212656215620?text=Hello%20AiWasl,%20I'm%20interested%20in%20the%20Pro%20plan." target="_blank" class="mt-8 block w-full text-center bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+                            اختر الباقة
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="py-20 bg-gray-900 fade-in-section">
+            <div class="container mx-auto px-6 max-w-4xl">
+                <h2 class="text-3xl md:text-4xl font-bold text-center text-white section-title max-w-md mx-auto">أسئلة شائعة</h2>
+                <div class="mt-12 space-y-6">
+                    <details class="bg-gray-800 p-6 rounded-lg cursor-pointer">
+                        <summary class="font-semibold text-lg text-white">هل يدعم البوت الدارجة المغربية فقط؟</summary>
+                        <p class="mt-4 text-gray-400">لا، البوت يدعم الدارجة المغربية، العربية الفصحى، الإنجليزية، والفرنسية. يمكنك تحديد اللغة التي تريدها لكل بوت على حدة.</p>
+                    </details>
+                    <details class="bg-gray-800 p-6 rounded-lg cursor-pointer">
+                        <summary class="font-semibold text-lg text-white">هل أحتاج إلى أي خبرة تقنية لاستخدام الخدمة؟</summary>
+                        <p class="mt-4 text-gray-400">إطلاقًا. سيتم تصميم لوحة التحكم لتكون سهلة وبديهية. يمكنك إعداد البوت الخاص بك في دقائق معدودة، وربطه بموقعك يتم عبر نسخ ولصق كود بسيط.</p>
+                    </details>
+                    <details class="bg-gray-800 p-6 rounded-lg cursor-pointer">
+                        <summary class="font-semibold text-lg text-white">ماذا يحدث إذا تجاوزت حد الرسائل في باقتي؟</summary>
+                        <p class="mt-4 text-gray-400">سيتوقف البوت عن الرد مؤقتًا حتى بداية دورة الفوترة التالية أو حتى تقوم بترقية باقتك. ستتلقى إشعارات عند الاقتراب من الحد الأقصى.</p>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+   
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 border-t border-gray-700">
+        <div class="container mx-auto px-6 py-12 text-center text-gray-400">
+            <!-- START OF CHANGE: Added Contact Button -->
+            <div class="mb-8">
+                <h3 class="text-2xl font-bold text-white mb-2">هل لديك أسئلة؟</h3>
+                <p class="mb-6">فريقنا جاهز للمساعدة. تواصل معنا الآن.</p>
+                <a href="mailto:saas.aiwasl@gmail.com" class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-8 rounded-lg transition-transform hover:scale-105 inline-block shadow-lg shadow-teal-500/30 hover:shadow-xl hover:shadow-teal-500/40">
+                    تواصل معنا
+                </a>
+            </div>
+            <!-- END OF CHANGE -->
+            <div class="flex flex-wrap justify-center mb-4">
+                <a href="TERMS.HTML" class="mx-4 my-2 hover:text-teal-400 transition-colors">شروط الخدمة</a>
+                <a href="Privacy.HTML" class="mx-4 my-2 hover:text-teal-400 transition-colors">سياسة الخصوصية</a>
+                <a href="REFUNDS.HTML" class="mx-4 my-2 hover:text-teal-400 transition-colors">سياسة الاسترداد</a>
+            </div>
+            <p>&copy; 2025 AiWasl. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // --- Dynamic Header on Scroll ---
+        const header = document.getElementById('main-header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // --- Mobile Menu Toggle ---
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuOverlay = document.getElementById('menu-overlay');
+        const hamburgerLines = menuBtn.querySelectorAll('.hamburger-line');
+
+        function toggleMenu() {
+            const isOpen = document.body.classList.toggle('mobile-menu-open');
+            mobileMenu.classList.toggle('open', isOpen);
+            menuOverlay.classList.toggle('open', isOpen);
+            
+            hamburgerLines[0].classList.toggle('rotate-45', isOpen);
+            hamburgerLines[0].classList.toggle('translate-y-2', isOpen);
+            hamburgerLines[1].classList.toggle('opacity-0', isOpen);
+            hamburgerLines[2].classList.toggle('-rotate-45', isOpen);
+            hamburgerLines[2].classList.toggle('-translate-y-2', isOpen);
+
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+        }
+
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        const closableItems = [...mobileMenu.querySelectorAll('a'), menuOverlay];
+        closableItems.forEach(item => {
+            item.addEventListener('click', () => {
+                if (document.body.classList.contains('mobile-menu-open')) {
+                    toggleMenu();
+                }
+            });
+        });
+
+        // --- Scroll Animations ---
+        const sections = document.querySelectorAll('.fade-in-section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+
+</body>
+</html>
+
